@@ -11,9 +11,9 @@ Zdrojova databáza IMDB obsahuje nasledujúce tabuľky:
 
 ### **ERD diagram**
 <p align="center">
-  <img src="https://github.com/JKabathova/AmazonBooks-ETL/blob/master/erd_schema.png" alt="ERD Schema">
+  <img src="IMDB_ERD.png" alt="ERD Schema">
   <br>
-  <em>Obrázok 1 Entitno-relačná schéma AmazonBooks</em>
+  <em>Obrázok 1 ERD IMDB</em>
 </p>
 
 ---
@@ -23,6 +23,13 @@ star_schema bol vytvorený na pohodlnú analýzu a vizualizáciu údajov. Hlavno
 - **`dim_directors`**:
 - **`dim_actors`**:
 - **`dim_date`**:
+
+<p align="center">
+  <img src="IMDB_Star_schema.png" alt="Star Schema">
+  <br>
+  <em>Obrázok 2 Star schema IMDB</em>
+</p>
+
 
 
 
