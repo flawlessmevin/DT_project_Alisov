@@ -41,4 +41,10 @@ ETL proces ma tri kľúčové fázy: extrakciu (Extract), transformáciu (Transf
 
 ---
 ## **4. Vizualizácia dát**
+<p align="center">
+  <img src="dashboard_imdb.png" alt="ERD Schema">
+  <br>
+  <em>Obrázok 3 Dashboard IMDB</em>
+</p>
 ---
+**Autor:** Ivan ALisov
