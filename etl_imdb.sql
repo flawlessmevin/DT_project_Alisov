@@ -8,7 +8,7 @@ USE SCHEMA IMDB_FLAMINGO.stage;
 
 
 
-
+--create movie table (staging)
 CREATE TABLE movie_stage
  (
   id VARCHAR(10) NOT NULL PRIMARY KEY,
@@ -23,6 +23,7 @@ CREATE TABLE movie_stage
 
 );
 
+--create genre table (staging)
 CREATE TABLE genre_stage
  (
 	movie_id VARCHAR(10),
@@ -30,6 +31,7 @@ CREATE TABLE genre_stage
 	PRIMARY KEY (movie_id, genre)
 );
 
+--create director_mapping table (staging)
 CREATE TABLE director_mapping_stage	
  (
 	movie_id VARCHAR(10),
@@ -37,6 +39,7 @@ CREATE TABLE director_mapping_stage
 	PRIMARY KEY (movie_id, name_id)
 );
 
+--create role_mapping table (staging)
 CREATE TABLE role_mapping_stage
  (
 	movie_id VARCHAR(10) NOT NULL,
@@ -45,6 +48,7 @@ CREATE TABLE role_mapping_stage
 	PRIMARY KEY (movie_id, name_id)
 );
 
+--create names table (staging)
 CREATE TABLE names_stage
  (
   id varchar(10) NOT NULL,
@@ -55,6 +59,7 @@ CREATE TABLE names_stage
   PRIMARY KEY (id)
 );
 
+--create ratings table (staging)
 CREATE TABLE ratings_stage
 (
 	movie_id VARCHAR(10) NOT NULL,
@@ -66,20 +71,21 @@ CREATE TABLE ratings_stage
 
 
 
+--create stage for csv files
 CREATE OR REPLACE STAGE IMDB_STAGE;
 
-
+--import csv files to stage 
 
 COPY INTO movie_stage
 FROM @IMDB_STAGE/movie.csv
-FILE_FORMAT = (
-    TYPE = 'CSV'
-    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
-    SKIP_HEADER = 1
+FILE_FORMAT = ( TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '"'SKIP_HEADER = 1
+    -- table movie had errors during import (Found character 'T' instead of record delimiter '\n')
     RECORD_DELIMITER = '\n'  
-    FIELD_DELIMITER = ','    
+    FIELD_DELIMITER = ','   
 )
 ON_ERROR = 'CONTINUE';
+
+
 
 COPY INTO genre_stage
 FROM @IMDB_STAGE/genre.csv
@@ -121,7 +127,7 @@ SELECT DISTINCT
         WHEN DATEDIFF(YEAR, n.date_of_birth, CURRENT_DATE) BETWEEN 35 AND 44 THEN '35-44'
         WHEN DATEDIFF(YEAR, n.date_of_birth, CURRENT_DATE) BETWEEN 45 AND 54 THEN '45-54'
         WHEN DATEDIFF(YEAR, n.date_of_birth, CURRENT_DATE) >= 55 THEN '55+'
-        ELSE 'Unknown'
+        ELSE 'Unknown' -- if no data - set "Unknown"
     END AS age_group,
     FROM names_stage n 
     JOIN director_mapping_stage d ON d.name_id = n.id;
@@ -133,7 +139,7 @@ CREATE TABLE dim_movies AS
 SELECT DISTINCT 
     m.id AS dim_movie_id,
     m.title AS title,
-    LISTAGG(g.genre, ', ') WITHIN GROUP (ORDER BY g.genre) AS dim_genres, -- Объединяем жанры через запятую
+    LISTAGG(g.genre, ', ') WITHIN GROUP (ORDER BY g.genre) AS dim_genres, -- split genres with commas  
     n.name AS director,
     m.year AS dim_year,
     m.date_published AS date_published,
@@ -149,7 +155,7 @@ GROUP BY
     m.id, m.title, n.name, m.year, m.date_published, m.duration, m.country, m.production_company, m.worlwide_gross_income; 
 
 
-SELECT * FROM dim_movies;
+
 
 
 --dim actors 
@@ -221,3 +227,13 @@ FROM ratings_stage r
 JOIN dim_movies m ON m.dim_movie_id = r.movie_id
 JOIN dim_directors d ON d.dim_director_id = m.director_id
 JOIN dim_date dt ON m.date_published = dt.date;
+
+
+
+--drop staging tables
+DROP TABLE IF EXISTS ratings_stage;
+DROP TABLE IF EXISTS names_stage;
+DROP TABLE IF EXISTS role_mapping_stage;
+DROP TABLE IF EXISTS director_mapping_stage;
+DROP TABLE IF EXISTS genre_stage;
+DROP TABLE IF EXISTS movie_stage
