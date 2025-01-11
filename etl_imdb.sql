@@ -209,7 +209,7 @@ FROM
     (SELECT DISTINCT date_published FROM movie_stage) t 
 WHERE
     date_published IS NOT NULL;         
-DROP TABLE FACT_RATING;
+
 
 
 --fact ratings
