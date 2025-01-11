@@ -174,7 +174,7 @@ ETL proces v Snowflake spracoval pôvodné dáta z formátu .csv do viacdimenzio
 
 ---
 ### **Graf 1: Priemerné hodnotenie filmu podľa roku premiéry**
-Umožňuje porovnať priemerné hodnotenie filmov podľa roku vydania
+Umožňuje porovnať priemerné hodnotenie filmov podľa roku vydania.
 ```sql
 SELECT 
     dm.dim_year, 
