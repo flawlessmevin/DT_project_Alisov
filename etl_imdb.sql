@@ -134,7 +134,7 @@ SELECT DISTINCT
 
 
 --dim movies 
-DROP TABLE dim_movies;
+
 CREATE TABLE dim_movies AS
 SELECT DISTINCT 
     m.id AS dim_movie_id,
