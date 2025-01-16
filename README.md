@@ -158,7 +158,7 @@ DROP TABLE IF EXISTS names_stage;
 DROP TABLE IF EXISTS role_mapping_stage;
 DROP TABLE IF EXISTS director_mapping_stage;
 DROP TABLE IF EXISTS genre_stage;
-DROP TABLE IF EXISTS movie_stage
+DROP TABLE IF EXISTS movie_stage;
 ```
 ETL proces v Snowflake spracoval pôvodné dáta z formátu .csv do viacdimenzionálneho modelu typu hviezda. Tento proces zahŕňal čistenie, obohacovanie a reorganizáciu dát. Výsledný model umožňuje analýzu preferencií a správania používateľov a slúži ako základ pre vizualizácie a reporty.
 
