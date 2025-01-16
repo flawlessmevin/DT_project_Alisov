@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/c3917d9f-a740-4d86-b911-057daf751c80)# ETL proces IMDB 
+# ETL proces IMDB 
 ---
 ## **1. Úvod a popis zdrojových dát**
 Zdrojové údaje obsahujú informácie o filmoch (žánre, jazyky, dĺžka trvania, dátum a krajina vydania atď.), hodnotenia filmov, informácie o hercoch a režiséroch filmov. 
