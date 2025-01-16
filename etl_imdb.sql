@@ -236,4 +236,4 @@ DROP TABLE IF EXISTS names_stage;
 DROP TABLE IF EXISTS role_mapping_stage;
 DROP TABLE IF EXISTS director_mapping_stage;
 DROP TABLE IF EXISTS genre_stage;
-DROP TABLE IF EXISTS movie_stage
+DROP TABLE IF EXISTS movie_stage;
