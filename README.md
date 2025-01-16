@@ -1,4 +1,4 @@
-# ETL proces IMDB 
+![image](https://github.com/user-attachments/assets/c3917d9f-a740-4d86-b911-057daf751c80)# ETL proces IMDB 
 ---
 ## **1. Úvod a popis zdrojových dát**
 Zdrojové údaje obsahujú informácie o filmoch (žánre, jazyky, dĺžka trvania, dátum a krajina vydania atď.), hodnotenia filmov, informácie o hercoch a režiséroch filmov. 
@@ -67,7 +67,7 @@ ON_ERROR = 'CONTINUE';
 ### **3.2 Transform**
 V tejto fáze prešli dáta zo staging tabuliek procesom čistenia, transformácie a obohatenia. Hlavným cieľom bolo vytvoriť dimenzie a faktovú tabuľku, ktoré zabezpečia jednoduchú a efektívnu analýzu.
 
-Tabulky **``dim_actors``** a **``dim_directors``** obsahujú informácie o hercoch a režiséroch. Logika definovania vekovej skupiny je rovnaká. V **``dim_actors``** je aj stĺpec ``gender`` ktorý je definovaný pomocou hodnot ``actor`` and ``actress`` z tabulky **``role_mapping_stage``**.
+Tabulky **``dim_actors``** a **``dim_directors``** obsahujú informácie o hercoch a režiséroch. Logika definovania vekovej skupiny je rovnaká. V **``dim_actors``** je aj stĺpec ``gender`` ktorý je definovaný pomocou hodnot ``actor`` and ``actress`` z tabulky **``role_mapping_stage``**. SCD: Typ 1, pretože tabuľky obsahuju aktuálne informácie o režisérovi a hiercah (napr. pohlavie, veková skupina na základe dátumu narodenia).
 ```sql
 CREATE TABLE dim_actors AS
 SELECT DISTINCT 
@@ -90,7 +90,7 @@ SELECT DISTINCT
     JOIN role_mapping_stage r ON r.name_id = n.id;
 ```
 ---
-Tabuľka **``dim_date``** je vytvorená z stlpca ``date_published`` v tabulke **``movie_stage``** na ukladanie údajov o dátume vydania hodnoteného filmu - ``day``, ``week``, ``month``, **``quarter``**, ``year``. Stĺpec ``month`` bol prevedený na reťazcový názov mesiaca kontrolou hodnoty čísla mesiaca v dátume.
+Tabuľka **``dim_date``** je vytvorená z stlpca ``date_published`` v tabulke **``movie_stage``** na ukladanie údajov o dátume vydania hodnoteného filmu - ``day``, ``week``, ``month``, **``quarter``**, ``year``. Stĺpec ``month`` bol prevedený na reťazcový názov mesiaca kontrolou hodnoty čísla mesiaca v dátume. Typ SCD: Typ 1. Tu pravdepodobne nedôjde k žiadnej zmene, pretože každý dátum je jedinečný a v budúcnosti sa nebude meniť.
 ```sql
 CREATE TABLE dim_date AS
 SELECT
@@ -120,7 +120,7 @@ WHERE
     date_published IS NOT NULL;         
 ```
 ---
-Tabuľka **``dim_movies``** bola vytvorená podobne jednoducho na základe tabuľky **``movie_stage``**, uchováva zdrojove údaje o filme. Pomocou tabuľky **``director_mapping_stage``** bol pridaný aj stĺpec ``director_id`` na uloženie id režiséra. Filmové žánre boli zapísané oddelené čiarkou pri pomocou **``LISTAGG``**, prevzaté z tabuľky **``genre_stage``**.
+Tabuľka **``dim_movies``** bola vytvorená podobne jednoducho na základe tabuľky **``movie_stage``**, uchováva zdrojove údaje o filme. Pomocou tabuľky **``director_mapping_stage``** bol pridaný aj stĺpec ``director_id`` na uloženie id režiséra. Filmové žánre boli zapísané oddelené čiarkou pri pomocou **``LISTAGG``**, prevzaté z tabuľky **``genre_stage``**. SCD: Typ 1. Pravdepodobne, ak sa informácie o filme zmenia - jednoducho sa aktualizuje existujúci záznam bez zachovania histórie zmien.
 ```sql
 LISTAGG(g.genre, ', ') WITHIN GROUP (ORDER BY g.genre) AS dim_genres, -- split genres with commas  
 ```
